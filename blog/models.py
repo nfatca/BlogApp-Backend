@@ -11,10 +11,10 @@ def rewrite_slug(content):
 class Post (models.Model):
     title = models.CharField(max_length=100)
     content = models. TextField()
-    image = models.URLField(max_length=5000, blank=True)
+    image = models.CharField(max_length=300, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
-    author = models. ForeignKey (User, on_delete=models.CASCADE)
+    author = models. ForeignKey (User, on_delete=models.CASCADE, null=True)
     is_published = models.BooleanField(default=False)
     slug = AutoSlugField(populate_from='title', slugify_function=rewrite_slug)
     

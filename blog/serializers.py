@@ -3,8 +3,6 @@ from .models import Post,Like,Comment,PostView
 
 import datetime
 
-
-
 class CommentSerializer(serializers.ModelSerializer):
     
     post = serializers.StringRelatedField()
@@ -35,8 +33,7 @@ class LikeSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     
     author = serializers.StringRelatedField()
-    author_id = serializers.IntegerField()
-    image = serializers.StringRelatedField()
+    author_id = serializers.IntegerField(read_only=True)
     like_count = serializers.SerializerMethodField()
     visit_count = serializers.SerializerMethodField()
     created_date = serializers.SerializerMethodField()
