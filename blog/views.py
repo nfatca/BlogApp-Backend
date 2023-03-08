@@ -74,7 +74,7 @@ class CommentMVS(ModelViewSet):
 class LikeMVS(ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
-    
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -97,15 +97,13 @@ class LikeMVS(ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        
+
         if self.request.user.id == instance.liker.id:
             if instance.is_liked == True:
-                serializer.validated_date['is_liked'] = False
+                serializer.validated_data['is_liked'] =False
             else:
-                serializer.validated_date['is_liked'] = True
-                
-        
-        
+                serializer.validated_data['is_liked'] = True
+
         self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
@@ -114,3 +112,16 @@ class LikeMVS(ModelViewSet):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
+    
+
+
+    def get_queryset(self):
+        post_id = self.kwargs.get('post_pk')
+        if post_id == None:
+            return self.queryset
+        else:
+            try:
+                post = Post.objects.get(id=post_id)
+            except Post.DoesNotExist:
+                raise NotFound("A post with this id does not exist")
+        return self.queryset.filter(post = post)
